@@ -1,52 +1,8 @@
-body {
-  padding: 5px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-h1 {
-  background-color: #ff6b6b;
-  color: white;
-  text-align: center;
-}
-
-h2 {
-  color: green;
-  font-size: 25px;
-}
-
-label {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-/* Create three unequal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-}
-
-/* Left and right column */
-.column.side {
-  width: 30%;
-}
-
-/* Middle column */
-.column.middle {
-  width: 60%;
-}
-
-@media screen and (max-width: 600px) {
-  .column.side, .column.middle {
-      width: 100%;
-  }
-}
-
 .tableCap {
   color: #2e86de;
   font-size: 25px;
   font-weight: bold;
+}
+body{
+  background: #1dd1a1;
 }

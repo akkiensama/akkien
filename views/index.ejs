@@ -1,76 +1,27 @@
 <% include partials/header %>
+<% include partials/navbar %>
 
-  <h1>Welcome to <%= title %></h1>
-  <div id="kien"></div>
-  <div class="column middle">
-    <p class="tableCap" >List of Candidates</p>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Received Votes</th>
-          <th>You voted</th>
-        </tr>
-      </thead>
-      <tbody id="candidatesTb"></tbody>
-      
-    </table>
+<header class="masthead text-white text-center">
+    <div class="container">
+      <img class="img-fluid mb-5 d-block mx-auto" src="/images/profile.png" alt="">
+      <h1 class="text-uppercase mb-0">Start Bootstrap</h1>
+      <hr class="star-light">
+      <h2 class="font-weight-light mb-0">Web Developer - Graphic Artist - User Experience Designer</h2>
+    </div>
+</header>
+<!-- Page Content -->
+<div class="container">
+  <!-- Header -->
   
-    <br/>
-    <br/>
-    <hr/>
-    <br/>
-    
-    <table>
-      <tr>
-        <th colspan="2" class="tableCap">Voting Tokens Statistic</th>
-      </tr>
-      <tr>
-        <td>Total Tokens</td>
-        <td id="totalTokens"></td>
-      </tr>
-      <tr>
-        <td>Available Tokens</td>
-        <td id="balanceTokens"></td>
-      </tr>
-      <tr>
-        <td>Price Per Token</td>
-        <td id="tokenPrice"></td>
-      </tr>
-    </table>
-    
-    <br/>
-    <br/>
-    <hr/>
+</div>
+  <!-- /.container -->
 
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+  <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Trung Kien 2018</p>
   </div>
-  <div class="column side">
-    <h2 id="userTokens"></h2>
-    <form id="buyForm">
-      <label>Buy more</label>
-      <input type="text" id="buyTokenInput"/>
-      <button>Buy</button>
-    </form>
-    <br>
-    <br>
-    <h2>Vote for candidate you like</h2>
-    <form id="voteForm">
-      <div class="form-group">
-          <label>Candidate Id</label><br>
-          <input type="text" class="form-control" id="idInput"/>
-      </div>
-      <div class="form-group">
-          <label>Number of tokens</label><br>
-          <input type="text" class="form-control" id="voteTokenInput"/>
-      </div>
-      
-      <button class="btn btn-primary">Vote</button>
-    </form>
-  </div>
-
-  <br>
-  <br>
-  <br>
+<!-- /.container -->
+</footer>
 
 <% include partials/footer %>

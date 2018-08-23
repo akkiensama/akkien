@@ -1,6 +1,7 @@
+const fs = require('fs');
 const HDWalletProvider = require('truffle-hdwallet-provider');//bản 0.0.5 bị lỗi => 0.0.3
 const Web3 = require('web3');
-const compiledVote = require('./build/Vote.json');
+const compiledFactory = require('../public/json/BallotFactory.json');
 
 const provider = new HDWalletProvider(
     'climb buyer trash also pull rule pull rapid apart ensure coin spend',
@@ -15,11 +16,15 @@ const deploy = async () => {
     console.log('Attempting to deploy contract from account ', accounts[0]);
     let result = {};
     try {
-        result = await new web3.eth.Contract(JSON.parse(compiledVote.interface))
-            .deploy({ data: compiledVote.bytecode, arguments: [1000, 100, ['0x1111', '0x2222', '0x3333']] })
-            .send({ gas: '3000000', from: accounts[0] });
+        result = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
+            .deploy({ data: compiledFactory.bytecode, arguments: [ 2 ] })
+            .send({ from: accounts[0], gas: '3000000' });
 
         console.log('Contract deploy to address ', result.options.address);
+        fs.appendFile('./Factory.address.js', 'address: ' + result.options.address, (err)=>{
+            if(err) throw err;
+            console.log('address is written!')
+        });
     } catch(err) {
         console.log(err.message);
     }
