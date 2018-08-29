@@ -1,8 +1,47 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 40px;
+  background: #18bc9c;
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 40px;
+  }
+}
+
+.nav-item {
+  width: 100px;
+}
+label {
+  color: #222f3e;
+  font-weight: bold;
+}
+footer {
+  padding-top: 15px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  width: 100%;
+  overflow: hidden;
+}
+#form-wrapper {
+  background: #dcdde1;
+  border-radius: 20px;
+  padding: 10px;
+  color: black;
+  overflow: hidden;
+}
+#main-title {
+  padding-bottom: 30px;
+}
+#btn-new-ballot {
+  float: right;
+}
 .tableCap {
   color: #2e86de;
   font-size: 25px;
   font-weight: bold;
-}
-body{
-  background: #1dd1a1;
 }

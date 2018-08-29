@@ -1,27 +1,80 @@
 <% include partials/header %>
 <% include partials/navbar %>
 
-<header class="masthead text-white text-center">
-    <div class="container">
-      <img class="img-fluid mb-5 d-block mx-auto" src="/images/profile.png" alt="">
-      <h1 class="text-uppercase mb-0">Start Bootstrap</h1>
-      <hr class="star-light">
-      <h2 class="font-weight-light mb-0">Web Developer - Graphic Artist - User Experience Designer</h2>
-    </div>
-</header>
-<!-- Page Content -->
-<div class="container">
-  <!-- Header -->
-  
-</div>
-  <!-- /.container -->
 
-<!-- Footer -->
-<footer class="py-5 bg-dark">
-  <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Trung Kien 2018</p>
+<div class="container-fluid text-white">
+  <div class="row">
+    <div class="col-lg-4 col-sm-6 mb-4">
+      <div id="form-wrapper">
+        <h2 class="text-center" id="try">Create your own ballot</h2>
+        <p style="color: red;">It's cost 2 ether for each new ballot.</p>
+        <p style="color: red;">Candidate's images will be upload to IPFS.</p>
+        <form method='post' action='/newimage' enctype='multipart/form-data' id="img-upload-form">
+          <div class="form-group">
+            <label>List of candidate's images Hash</label>
+            <textarea readonly class="form-control" type="text" rows="5" id="ip-imgs"></textarea>
+          </div>
+          <div class="form-group">
+            <input class="form-control" name="avatar" type="file">
+          </div>
+          <input class="btn btn-primary" name="submit" type="submit" value="Upload to IPFS">
+        </form>
+
+
+        <form id="new-ballot-form">
+          <div class="form-group">
+            <label>Description</label>
+            <input class="form-control" type="text" placeholder="Describe your ballot" id="ip-desc">
+          </div>
+          <div class="form-group">
+            <label>List of candidate's ids</label>
+            <input class="form-control" type="text" placeholder="Ex: 12, 23, 34" id="ip-ids">
+          </div>
+          <div class="form-group">
+            <label>List of candidate's names (only ascii characters)</label>
+            <input class="form-control" type="text" placeholder="Ex: Trung Kien, Thong, Thinh" id="ip-names">
+          </div>    
+          <div class="form-group">
+            <label>Initial Tokens</label>
+            <input class="form-control" type="text" placeholder="Enter initial tokens" id="ip-initTokens">
+          </div>
+          <div>
+            <label>Token Price (wei)</label>
+            <input class="form-control" type="text" placeholder="Enter price per token" id="ip-tokenPrice">
+          </div>
+          <div class="form-group">
+            <label>Time to vote (second)</label>
+            <input class="form-control" type="text" placeholder="Enter time" id="ip-time">
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-new-ballot" >Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <!--------------------------------------------------------------------------------------------->
+
+    <div class="col-lg-4 col-sm-6 text-center mb-4">
+      <h1 class="text-uppercase mb-0" id="main-title">Voting Dapp</h1>
+      <img class="img-fluid mb-5 d-block mx-auto" src="/images/profile.png" alt="">      
+      <h4 class="font-weight-light mb-0">We create a transparent environment for you!</h4>
+    </div>
+   
+    <!--------------------------------------------------------------------------------------------->   
+   
+    <div class="col-lg-4 col-sm-6 text-center mb-4">
+      <h2>Created Ballot</h2>
+    </div> 
   </div>
-<!-- /.container -->
-</footer>
+
+    <!-- Footer -->
+  <footer class="bg-dark">
+    <div class="container">
+        <p class="text-center text-white">Copyright &copy; Trung Kien 2018</p>
+    </div>
+  <!-- /.container -->
+  </footer>
+</div>
+
+
 
 <% include partials/footer %>

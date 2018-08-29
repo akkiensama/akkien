@@ -1,9 +1,14 @@
-// var factoryInstance;
+var compiledFactory;
+var compiledBallot;
 
-// var ballot;
-// var ballotInstance;
+var Factory;
+var factory;
 
-// var candidates;
+var Ballot;
+var ballot;
+
+var candidates;
+
 
 window.addEventListener('load', function() {
 
@@ -15,14 +20,107 @@ window.addEventListener('load', function() {
     }
     
     console.log('I am web3', web3);
+    
+    var ipfs = window.IpfsApi('ipfs.infura.io', '5001', 'https');
 
+    console.log('I am ipfs', ipfs);
     // Now you can start your app & access web3 freely:
-    //startApp();
+    startApp();
 });
 
-// function startApp() {
 
-//     initContract();
+function startApp() {
+    //initContract();
+    $.getJSON('../json/BallotFactory.json', function(data) {
+        compiledFactory = data;
+        Factory  = web3.eth.contract(JSON.parse(compiledFactory.interface));
+
+        factory = Factory.at('0x4F35bea6557781A34481f5265c2E0181E4F7C435');
+    });
+
+///-----------------------------------------------------------------------------------
+    var files = [];
+    $('#btn-img-add').on('click', function(event) {
+        event.preventDefault();
+        files.push($("#ip-img")[0].files[0]);
+
+        var listNames = '';
+        files.forEach((item) => {
+            listNames += item.name + '\n';
+        });       
+
+        $("#ip-imgs").val( listNames );
+    });
+
+    $('#btn-img-clear').on('click', function(event) {
+        event.preventDefault();
+        //files =[];
+        //listNames = '';
+        //$("#ip-imgs").val( listNames );
+        let reader = new window.FileReader();
+        reader.readAsArrayBuffer(files[0]);
+        reader.onloadend = () => convertToBuffer(reader);
+    });
+
+    $('#btn-new-ballot').on('click', function(event) {
+        event.preventDefault();
+        $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Deploying Contract...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+
+        //-----GET INPUT DATA-----------------
+        var desc = $("#ip-desc").val();
+
+        var raw_ids = $("#ip-ids").val();
+        var ids = raw_ids.split(",");
+
+        var raw_names = $("#ip-names").val();
+        var names = raw_names.split(",");
+
+        //var desc = $("#ip-desc").text();
+        var initTokens = $("#ip-initTokens").val();
+        var tokenPrice = $("#ip-tokenPrice").val();
+        var voteTime = $("#ip-time").val();
+
+        if(!isNaN(initTokens) || !isNaN(tokenPrice) || !isNaN(voteTime)){
+            alert('Invalid Input');
+            $this.html($this.data('original-text'));
+        } else {
+            $.getJSON('../json/Ballot.json', function(data) {
+                compiledBallot = data;
+                Ballot  = web3.eth.contract(JSON.parse(compiledBallot.interface));
+
+                var ballot = Ballot.new(desc, ids, names, ["0x1112", "0x2223"], initTokens, tokenPrice, voteTime, web3.eth.accounts[0], 
+                                {from: web3.eth.accounts[0], data: compiledBallot.bytecode, gas: 3000000}, function(err, res){                               
+                                    if(err){
+                                        console.log(err);
+                                        $this.html($this.data('original-text'));
+                                    } else {                                   
+                                        if(!res.address) {                                       
+                                            console.log(res.transactionHash);                               
+                                        } else {
+                                            $this.html($this.data('original-text'));
+                                        }                           
+                                    }                                
+                                });
+            });
+        }
+
+    });
+}
+
+convertToBuffer = async(reader) => {
+    //file is converted to a buffer to prepare for uploading to IPFS
+    const buffer = await Buffer.from(reader.result);
+    //set this buffer -using es6 syntax
+    await ipfs.add(buffer, (err, ipfsHash) => {
+        console.log(err, 'hash: ', ipfsHash);
+    });
+};
+
 //     //getInitData();
     
 //     $("#buyForm").submit(function(event){
@@ -53,23 +151,9 @@ window.addEventListener('load', function() {
 //             });
 //         }
 //     });
-// }
+//}
 
-// function initContract(){ 
-//     var factoryABI;
-//     $.getJSON('../json/BallotFactory.json', function(data) {
-//         factoryABI = JSON.parse(data.interface);
-//     });
-//     var factory  = web3.eth.contract(ballotFactoryABI);
-//     factoryInstance = contract.at('0x4F35bea6557781A34481f5265c2E0181E4F7C435');
 
-//     var ballotABI;
-//     $.getJSON('../json/Ballot.json', function(data) {
-//         ballotABI = JSON.parse(data.interface);
-//     });
-//     ballot  = web3.eth.contract(ballotABI);
-
-// }
 
 // function getInitData(){
 //     ///get user info
@@ -109,8 +193,12 @@ window.addEventListener('load', function() {
 //         $("#tokenPrice").text(data + ' wei');
 //     });
     
-// }
+//}
 
+
+function initContract(){ 
+    
+}
 
 
 
