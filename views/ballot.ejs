@@ -1,14 +1,72 @@
 <% include partials/header %>
+<% include partials/navbar %>
+  
+  <div class="container-fluid text-white">
+    <h1 id="welcome" style="color: #341f97"></h1>
+    <p class="data" id="description"></p>
+    <div class="row">
+      <div class="col-lg-8">
+          <table>
+            <tr>
+              <th colspan="2" class="tableCap">Ballot Information</th>
+            </tr>
+            <tr>
+              <th>Manage By</th>
+              <td class="data" id="owner"></td>
+            </tr>
+            <tr>
+              <th>Ballot Start At</th>
+              <td class="data" id="startTime"></td>
+            </tr>
+            <tr>
+              <th>Time to vote</th>
+              <td class="data" id="voteTime"></td>
+            </tr>
+            <tr>
+              <td>Total Tokens</td>
+              <td class="data" id="totalTokens"></td>
+            </tr>
+            <tr>
+              <td>Available Tokens</td>
+              <td class="data" id="balanceTokens"></td>
+            </tr>
+            <tr>
+              <td>Price Per Token</td>
+              <td class="data" id="tokenPrice"></td>
+            </tr>           
+          </table>
+      </div>
+      <div class="col-lg-4">
+          <h2 id="userTokens">Tao 4</h2>
+          <form id="buyForm">
+            <label>Buy token</label>
+            <input type="text" id="buyTokenInput"/>
+            <button>Buy</button>
+          </form>
+    
+          <h2>Vote for candidate you like</h2>
+          <form id="voteForm">
+            <div class="form-group">
+                <label>Candidate Id</label><br>
+                <input type="text" class="form-control" id="idInput"/>
+            </div>
+            <div class="form-group">
+                <label>Number of tokens</label><br>
+                <input type="text" class="form-control" id="voteTokenInput"/>
+            </div>
+            
+            <button class="btn btn-primary">Vote</button>
+          </form>
+      </div>
+    </div>
 
-  <h1>Welcome to <%= title %></h1>
-  <div id="kien"></div>
-  <div class="column middle">
     <p class="tableCap" >List of Candidates</p>
     <table class="table">
       <thead>
         <tr>
-          <th>Number</th>
+          <th>Id</th>
           <th>Name</th>
+          <th>ImageHash</th>
           <th>Received Votes</th>
           <th>You voted</th>
         </tr>
@@ -16,61 +74,7 @@
       <tbody id="candidatesTb"></tbody>
       
     </table>
-  
-    <br/>
-    <br/>
-    <hr/>
-    <br/>
-    
-    <table>
-      <tr>
-        <th colspan="2" class="tableCap">Voting Tokens Statistic</th>
-      </tr>
-      <tr>
-        <td>Total Tokens</td>
-        <td id="totalTokens"></td>
-      </tr>
-      <tr>
-        <td>Available Tokens</td>
-        <td id="balanceTokens"></td>
-      </tr>
-      <tr>
-        <td>Price Per Token</td>
-        <td id="tokenPrice"></td>
-      </tr>
-    </table>
-    
-    <br/>
-    <br/>
-    <hr/>
-
-  </div>
-  <div class="column side">
-    <h2 id="userTokens"></h2>
-    <form id="buyForm">
-      <label>Buy more</label>
-      <input type="text" id="buyTokenInput"/>
-      <button>Buy</button>
-    </form>
-    <br>
-    <br>
-    <h2>Vote for candidate you like</h2>
-    <form id="voteForm">
-      <div class="form-group">
-          <label>Candidate Id</label><br>
-          <input type="text" class="form-control" id="idInput"/>
-      </div>
-      <div class="form-group">
-          <label>Number of tokens</label><br>
-          <input type="text" class="form-control" id="voteTokenInput"/>
-      </div>
-      
-      <button class="btn btn-primary">Vote</button>
-    </form>
   </div>
 
-  <br>
-  <br>
-  <br>
-
+  <script src="/javascripts/ballot.client.js"></script>
 <% include partials/footer %>

@@ -1,8 +1,7 @@
 <% include partials/header %>
 <% include partials/navbar %>
 
-
-<div class="container-fluid text-white">
+<div class="container-fluid" id="mainpage">
   <div class="row">
     <div class="col-lg-4 col-sm-6 mb-4">
       <div id="form-wrapper">
@@ -12,14 +11,14 @@
         <form method='post' action='/newimage' enctype='multipart/form-data' id="img-upload-form">
           <div class="form-group">
             <label>List of candidate's images Hash</label>
-            <textarea readonly class="form-control" type="text" rows="5" id="ip-imgs"></textarea>
+            <textarea readonly class="form-control" type="text" rows="5" id="ip-imgs" placeholder="<%=hash%>"></textarea>
           </div>
           <div class="form-group">
             <input class="form-control" name="avatar" type="file">
           </div>
-          <input class="btn btn-primary" name="submit" type="submit" value="Upload to IPFS">
+          <input class="btn btn-primary" id="btn-upload" name="submit" type="submit" value="Upload to IPFS" style="float: left;">
         </form>
-
+        <a class="btn btn-primary" href="/clearhash" style="float: right;">Clear Hash</a>
 
         <form id="new-ballot-form">
           <div class="form-group">
@@ -51,30 +50,26 @@
       </div>
     </div>
 
-    <!--------------------------------------------------------------------------------------------->
+    <!-- -------------------------------------------------------------------- -->
 
-    <div class="col-lg-4 col-sm-6 text-center mb-4">
+    <div class="col-lg-4 col-sm-6 text-white text-center mb-4">
       <h1 class="text-uppercase mb-0" id="main-title">Voting Dapp</h1>
       <img class="img-fluid mb-5 d-block mx-auto" src="/images/profile.png" alt="">      
-      <h4 class="font-weight-light mb-0">We create a transparent environment for you!</h4>
+      <h4 class="font-weight-light mb-0">We create a transparent environment for voting!</h4>
     </div>
    
-    <!--------------------------------------------------------------------------------------------->   
+    <!-- -------------------------------------------------------------------- -->
+
    
-    <div class="col-lg-4 col-sm-6 text-center mb-4">
-      <h2>Created Ballot</h2>
+    <div class="col-lg-4 col-sm-6 mb-4">
+      <h2 style="text-align: center;">Created Ballot</h2>
+      <div id="start-ballots"></div>
     </div> 
   </div>
 
-    <!-- Footer -->
-  <footer class="bg-dark">
-    <div class="container">
-        <p class="text-center text-white">Copyright &copy; Trung Kien 2018</p>
-    </div>
-  <!-- /.container -->
-  </footer>
+  <% include partials/foot %>
 </div>
-
+<script src="/javascripts/main.js"></script>
 
 
 <% include partials/footer %>

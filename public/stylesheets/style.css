@@ -40,8 +40,18 @@ footer {
 #btn-new-ballot {
   float: right;
 }
+.ballot{
+  background: #dcdde1;
+  color: #341f97;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px;
+}
 .tableCap {
   color: #2e86de;
   font-size: 25px;
   font-weight: bold;
+}
+td{
+  color: black;
 }

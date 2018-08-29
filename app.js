@@ -5,9 +5,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+
+//Handle file upload
 var multer = require('multer');
+var storage = multer.memoryStorage();
 
 var indexRouter = require('./routes/index');
+var ballotRouter = require('./routes/ballot');
 var usersRouter = require('./routes/users');
 // kien add packages
 
@@ -20,8 +24,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //Handle files upload
-app.use(multer({dest:'./public/images/uploads'}).any());
-app.locals.upload = multer({ dest: './public/images/uploads' });
+app.use(multer({storage: storage}).single('avatar'));
+//app.locals.upload = multer({ dest: './public/images/uploads' });
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -36,6 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //});
 
 app.use('/', indexRouter);
+app.use('/ballot', ballotRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
