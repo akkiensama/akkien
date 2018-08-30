@@ -16,7 +16,7 @@ contract BallotFactory {
         string _description, 
         uint[] candidateIds, 
         bytes32[] candidateNames, 
-        bytes32[] imgHashHead, 
+        bytes32[] candidateImages, 
         uint tokens, 
         uint pricePerToken, 
         uint _voteTime
@@ -27,7 +27,7 @@ contract BallotFactory {
         address newBallot = new Ballot(_description, 
         candidateIds, 
         candidateNames, 
-        imgHashHead, 
+        candidateImages, 
         tokens, 
         pricePerToken, 
         _voteTime, 
@@ -96,15 +96,14 @@ contract Ballot {
         string _description, 
         uint[] candidateIds, 
         bytes32[] candidateNames,
-        bytes32[] imgHashHead,
-        bytes32[] imgHashTail,
+        bytes32[] candidateImages,
         uint tokens, 
         uint pricePerToken, 
         uint _voteTime,
         address _owner)
     public payable {
         require(candidateNames.length == candidateIds.length, "Number of name must equals number of id");
-        require(imgHashHead.length == candidateIds.length, "Number of images must equals number of id");
+        require(candidateImages.length == candidateIds.length, "Number of images must equals number of id");
 
         owner = _owner;
         description = _description;
@@ -119,7 +118,7 @@ contract Ballot {
             candidateList.push(candidate({
                 id: candidateIds[i], 
                 name: candidateNames[i], 
-                imageHash: imgHashHead[i], 
+                imageHash: candidateImages[i], 
                 voteCount: 0
             }));
         }
@@ -179,10 +178,6 @@ contract Ballot {
 
     function tokensSold() public view returns (uint) {
         return totalTokens - balanceTokens;
-    }
-
-    function numberCandidates() public view returns (uint) {
-        return candidateList.length;
     }
 
     // Ballot creation can withdraw money when ballot close

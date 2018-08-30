@@ -22,22 +22,16 @@ window.addEventListener('load', function() {
     startApp();
 });
 
-function startApp() {
+async function startApp() {
 
-    $.getJSON('../json/Ballot.json', function(data) {
+    await $.getJSON('../json/Ballot.json', function(data) {
         compiledBallot = data;
-        Ballot  = web3.eth.contract(JSON.parse(compiledBallot.interface));
-        
-        ballot = Ballot.at(address);
-        console.log(ballot);
-
-        getInitData();
-
-
-
-
-
     });
+
+    Ballot  = web3.eth.contract(JSON.parse(compiledBallot.interface));
+    ballot = Ballot.at(address);
+
+    getInitData();
         
 }
 
