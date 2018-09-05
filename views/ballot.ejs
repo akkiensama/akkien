@@ -23,50 +23,44 @@
               <td class="data" id="voteTime"></td>
             </tr>
             <tr>
-              <td>Total Tokens</td>
+              <th>Total Tokens</th>
               <td class="data" id="totalTokens"></td>
             </tr>
             <tr>
-              <td>Available Tokens</td>
+              <th>Available Tokens</th>
               <td class="data" id="balanceTokens"></td>
             </tr>
             <tr>
-              <td>Price Per Token</td>
+              <th>Price Per Token</th>
               <td class="data" id="tokenPrice"></td>
             </tr>           
           </table>
       </div>
+
       <div class="col-lg-4">
-          <h2 id="userTokens">Tao 4</h2>
-          <form id="buyForm">
-            <label>Buy token</label>
-            <input type="text" id="buyTokenInput"/>
-            <button>Buy</button>
+          <p class="tableCap" id="userTokens">You own <span id="token-own"></span><span id="token-available"></span> is available to vote.</p>
+          <form>
+            <label style="width:120px;">Buy token</label>
+            <input type="text" id="ip-buy-tokens"/>
+            <button id="btn-buy-token" class="btn-primary">Buy</button>
           </form>
     
-          <h2>Vote for candidate you like</h2>
-          <form id="voteForm">
-            <div class="form-group">
-                <label>Candidate Id</label><br>
-                <input type="text" class="form-control" id="idInput"/>
-            </div>
-            <div class="form-group">
-                <label>Number of tokens</label><br>
-                <input type="text" class="form-control" id="voteTokenInput"/>
-            </div>
-            
-            <button class="btn btn-primary">Vote</button>
+          <p class="tableCap">Vote for candidate you like</p>
+          <form>          
+            <label style="width:120px;">Candidate Id</label>
+            <input type="text" id="ip-candidate-id"/>                  
+            <button id="btn-vote" class="btn-primary">Vote</button>
           </form>
       </div>
     </div>
 
-    <p class="tableCap" >List of Candidates</p>
+    <p class="tableCap text-center">List of Candidates</p>
     <table class="table">
       <thead>
         <tr>
+          <th>Avatar</th>
           <th>Id</th>
           <th>Name</th>
-          <th>ImageHash</th>
           <th>Received Votes</th>
           <th>You voted</th>
         </tr>

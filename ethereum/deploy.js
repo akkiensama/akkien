@@ -21,9 +21,9 @@ const deploy = async () => {
             .send({ from: accounts[0], gas: '3000000' });
 
         console.log('Contract deploy to address ', result.options.address);
-        fs.appendFile('./Factory.address.js', 'address: ' + result.options.address, (err)=>{
-            if(err) throw err;
-            console.log('address is written!')
+        fs.writeFile('./Factory.address.js', result.options.address, function (err) {
+            if (err) throw err;
+            console.log('Saved address!');
         });
     } catch(err) {
         console.log(err.message);

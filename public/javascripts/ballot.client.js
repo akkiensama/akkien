@@ -3,9 +3,12 @@ var compiledBallot;
 var Ballot;
 var ballot;
 
-var address = $("#ballot-add").prop("content");
+var tokenPrice;
 
-var candidates;
+var owner;
+var userData;
+
+var address = $("#ballot-add").prop("content");
 
 window.addEventListener('load', function() {
 
@@ -23,7 +26,6 @@ window.addEventListener('load', function() {
 });
 
 async function startApp() {
-
     await $.getJSON('../json/Ballot.json', function(data) {
         compiledBallot = data;
     });
@@ -33,67 +35,40 @@ async function startApp() {
 
     getInitData();
         
+    $("#btn-buy-token").on('click', function(event){
+        event.preventDefault();
+
+        var tokenInput = $("#ip-buy-tokens").val();
+        var valueInWei = tokenInput * tokenPrice;
+        if(isNaN(tokenInput)){
+            alert('Wrong type input, please enter number');
+        } else {
+            ballot.buy.sendTransaction({from: web3.eth.accounts[0], value: valueInWei, gas: '1000000'}, function(){
+                //location.reload(true);
+            });
+        }
+    });
+
+    $("#btn-vote").on('click', function(event){
+        event.preventDefault();
+
+        var idInput = $("#ip-id").val();
+        if(isNaN(idInput)){
+            alert('Wrong type input, please enter number');
+        } else {
+            voteInstance.voteForCandidate.sendTransaction( candidates[idInput], tokenInput, 
+                {from: web3.eth.accounts[0], gas: '1000000'}, function(){
+                    location.reload(true);
+            });
+        }
+    });
 }
-
-//     //getInitData();
-    
-//     $("#buyForm").submit(function(event){
-//         event.preventDefault();
-
-//         var tokenInput = $("#buyTokenInput").val();
-//         if(isNaN(tokenInput)){
-//             alert('Wrong type input, please enter number');
-//         } else {
-//             voteInstance.buy.sendTransaction({from: web3.eth.accounts[0], value: tokenInput, gas: '1000000'}, function(){
-//                 location.reload(true);
-//             });
-//         }
-//     });
-
-//     $("#voteForm").submit(function(event){
-//         event.preventDefault();
-
-//         var idInput = $("#idInput").val();
-//         var tokenInput = $("#voteTokenInput").val();
-        
-//         if(isNaN(idInput) || isNaN(tokenInput)){
-//             alert('Wrong type input, please enter number');
-//         } else {
-//             voteInstance.voteForCandidate.sendTransaction( candidates[idInput], tokenInput, 
-//                 {from: web3.eth.accounts[0], gas: '1000000'}, function(){
-//                     location.reload(true);
-//             });
-//         }
-//     });
-//}
 
 
 
 function getInitData(){
-    ///get user info
-    // ballot.voterDetails.call(web3.eth.accounts[0], {from:web3.eth.accounts[0]}, function(err, userInfo){
-    //     $("#userTokens").text('You bought ' + userInfo[0] + ' tokens');
 
-    //     /// get candidates infomation
-    //     ballot.allCandidates.call({from:web3.eth.accounts[0]}, function(err,candidateList){           
-    //         candidates = candidateList;
-
-    //         for(let i = 0; i < candidateList.length; i++){          
-    //             ballot.totalVotesFor.call(candidateList[i], {from:web3.eth.accounts[0]}, function(err,votes){  
-    //                 $("#candidatesTb").append(
-    //                     '<tr><td>' + 
-    //                     i + '</td><td>' + 
-    //                     candidateList[i] + '</td><td>' + 
-    //                     votes + '</td><td>' + 
-    //                     userInfo[1][i] + '</td></tr>'
-    //                 );              
-    //             });
-    //         }                         
-    //     });  
-
-    // });    
-
-
+    /// get ballot address
     $("#welcome").text('Welcome to ballot ' + address );
     /// get owner
     ballot.owner.call({from:web3.eth.accounts[0]}, function(err,data){        
@@ -112,7 +87,8 @@ function getInitData(){
         $("#balanceTokens").text(data);
     });
     /// get tokenPrice
-    ballot.tokenPrice.call({from:web3.eth.accounts[0]}, function(err,data){       
+    ballot.tokenPrice.call({from:web3.eth.accounts[0]}, function(err,data){ 
+        tokenPrice = data;
         $("#tokenPrice").text(data + ' wei');
     });
     /// get start time
@@ -124,20 +100,54 @@ function getInitData(){
         $("#voteTime").text(data + ' second');
     });
 
-    ballot.candidateList.call( 0,{from:web3.eth.accounts[0]}, function(err,data){        
-        console.log('list', data);
-        $("#candidatesTb").append(
-            '<tr><td>' + 
-            data[0] + '</td><td>' + 
-            data[1].substring(0, 30) + '</td><td>' + 
-            data[2] + '</td><td>' + 
-            data[3] + '</td><td>'
-            
-        ); 
+
+    /// --------------- get candidate list -----------------
+    ballot.numberCandidates.call({from:web3.eth.accounts[0]}, function(err,number){        
+        for( var i=0; i< number; i++){
+            ballot.candidateList.call( i,{from:web3.eth.accounts[0]}, function(err, Info){
+        
+                var hashFromHEx = hex_to_ascii(Info[2].substring(2,) + Info[3].substring(2,30));
+                var imgLink = 'https://gateway.ipfs.io/ipfs/'.concat(hashFromHEx);
+                
+                $("#candidatesTb").append(
+                    '<tr><td><img src="' + imgLink + '" class="rounded-circle" alt="avatar"></td><td>' +
+                    Info[0] + '</td><td>' + 
+                    hex_to_ascii(Info[1]) + '</td><td>' +             
+                    Info[4] + '</td><tr>'   
+                ); 
+            });
+        }
     });
-    
+
+    /// get user(voter) info
+    ballot.voters.call(web3.eth.accounts[0], {from:web3.eth.accounts[0]}, function(err,data){
+        var text0 = data[0].toString();
+        if(text0 == '0' || text0 == '1'){
+            text0 += ' token.\n';
+        } else {
+            text0+= ' tokens.\n';
+        }
+        $("#token-own").text(text0);
+        var text1 = data[1].toString();
+        if(text1 == '0' || text1 == '1'){
+            text1 += ' token';
+        } else {
+            text1+= ' tokens';
+        }
+        $("#token-available").text(text1);
+        console.log('token bought', data[0], '\ntoken avai', data[1], '\ntoken used', data[2]);
+    });
 }
 
+function hex_to_ascii(str1)
+ {
+	var hex  = str1.toString();
+	var str = '';
+	for (var n = 0; n < hex.length; n += 2) {
+		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+	}
+	return str;
+ }
 
 
 

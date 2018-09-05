@@ -6,7 +6,7 @@
     <div class="col-lg-4 col-sm-6 mb-4">
       <div id="form-wrapper">
         <h2 class="text-center" id="try">Create your own ballot</h2>
-        <p style="color: red;">It's cost 2 ether for each new ballot.</p>
+        <p style="color: red;">It's cost <span id="factory-cost" style="color:blue;"></span> ether for each new ballot.</p>
         <p style="color: red;">Candidate's images will be upload to IPFS.</p>
         <div>
           <form id="img-upload-form">
@@ -17,9 +17,9 @@
             <div class="form-group">
               <input id="ip-img" class="form-control" name="avatar" type="file">
             </div>
-            <input class="btn btn-primary" id="btn-upload" name="submit" type="submit" value="Upload to IPFS" style="float: left;">
+            <button class="btn btn-primary" id="btn-upload" style="float: left;">Upload to IPFS</button>
           </form>
-          <a class="btn btn-primary" href="/clearhash" style="float: right;">Clear Hash</a>
+          <button class="btn btn-primary" id="clear-hash" style="float: right;">Clear Hash</button>
         </div>
 
         <form style="clear: left;" id="new-ballot-form">
@@ -58,13 +58,18 @@
       <h1 class="text-uppercase mb-0" id="main-title">Voting Dapp</h1>
       <img class="img-fluid mb-5 d-block mx-auto" src="/images/profile.png" alt="">      
       <h4 class="font-weight-light mb-0">We create a transparent environment for voting!</h4>
+      <div id="factory-owner">
+        <br>
+        <p>Your factory hold <span id="factory-balance" style="color:blue;"></span> ether</p>
+        <button id="factory-withdraw" class="btn btn-primary">Withdraw Factory Money</button>
+      </div>
+      
     </div>
    
     <!-- -------------------------------------------------------------------- -->
 
-   
     <div class="col-lg-4 col-sm-6 mb-4">
-      <h2 style="text-align: center;">Created Ballot</h2>
+      <h2 style="text-align: center;">List of Created Ballot</h2>
       <div id="start-ballots"></div>
     </div> 
   </div>

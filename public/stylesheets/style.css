@@ -48,10 +48,15 @@ footer {
   padding: 5px;
 }
 .tableCap {
-  color: #2e86de;
+  color: #341f97;
   font-size: 25px;
   font-weight: bold;
 }
 td{
   color: black;
+}
+
+.rounded-circle {
+  width: 100px;
+  height: 100px;
 }

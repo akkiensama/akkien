@@ -3,10 +3,10 @@ var compiledBallot;
 var Ballot;
 var ballot;
 
-var candidates;
+var owner;
 
-var ipfs = window.IpfsApi({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
-var Buffer = window.IpfsApi().Buffer;
+const ipfs = window.IpfsApi({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+const Buffer = window.IpfsApi().Buffer;
 
 window.addEventListener('load', function() {
 
@@ -25,54 +25,46 @@ window.addEventListener('load', function() {
 
 
 async function startApp() {
-
     await $.getJSON('../json/BallotFactory.json', function(data) {
         compiledFactory = data; 
     });
 
     Factory  = web3.eth.contract(JSON.parse(compiledFactory.interface));
-    factory = Factory.at('0x2765215c2a36cc0ed390ce57e0b1dbd03bb582b2');
+    factory = Factory.at('0x823fc37B9CB3B8016D5FC886cC5C820d0C80d39c');
 
-    factory.getDeployedBallots.call({from:web3.eth.accounts[0]}, function(err,deployedBallots){
-        var add = '';
-        for(var i = 0; i < deployedBallots.length; i++){
-            add += '<div class="ballot"><p>' + deployedBallots[i] + '</p>' +
-            '<a href="ballot/' + deployedBallots[i] + '">View Details</a></div>';
-        }   
-        $('#start-ballots').append(add);
-    });
+    getInitData();
 
-///-----------------------------------------------------------------------------------   
+    
+///----------------------------------------------------------------------------------- 
+    /// Button  upload image to ipfs
     $('#btn-upload').on('click', function(event) {
         event.preventDefault();
 
         $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Deploying Contract...';
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Uploading Image ...';
         if ($(this).html() !== loadingText) {
             $this.data('original-text', $(this).html());
             $this.html(loadingText);
         }
 
         const file = $('#ip-img')[0].files[0];
-        Buffer.from(file).then( (fileBuffer) => {
-            console.log(fileBuffer);
-            ipfs.add(fileBuffer, (err, ipfsHash) => {
-                if(err) {
-                  console.log('error', err);
-                } else {
-                  console.log('hash', ipfsHash[0].hash );
-    
-                  var oldHolder = $('#ip-imgs').prop('placeholder');
-                  $('#ip-imgs').prop('placeholder', oldHolder + ',' + ipfsHash[0].hash);
-                }
-            }); 
-        });
 
-     
+        let reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = () => convertAndUpload(reader);
         
     });
 
 
+    /// Button Clear Image Hash List
+    $('#clear-hash').on('click', function(event) {
+        event.preventDefault();
+
+        $('#ip-imgs').val('');
+    });
+
+
+    /// Button Create New Ballot
     $('#btn-new-ballot').on('click', function(event) {
         event.preventDefault();
 
@@ -91,28 +83,34 @@ async function startApp() {
             var ids = raw_ids.split(",");
             var raw_names = $("#ip-names").val();
             var names = raw_names.split(",");
-            var raw_imageHashs = $("#ip-imgs").prop("placeholder");
+
+            var raw_imageHashs = $("#ip-imgs").val();
             var imageHashs = raw_imageHashs.split(",");
+            var imgHashHeads = [];
+            var imgHashTails = [];
+            for(var i = 0; i < imageHashs.length; i++){
+                imgHashHeads.push(imageHashs[i].substring(0, 32));
+                imgHashTails.push(imageHashs[i].substring(32, 46));
+            }
 
             var initTokens = $("#ip-initTokens").val();
             var tokenPrice = $("#ip-tokenPrice").val();
             var voteTime = $("#ip-time").val();
 
-            //if(!isNaN(initTokens) || !isNaN(tokenPrice) || !isNaN(voteTime)){
-            //    alert('Invalid Input');
-            //    $this.html($this.data('original-text'));
-            //} else {
-
-            factory.createBallot.sendTransaction( desc, ids, names, ["0x1112", "0x2223"], initTokens, tokenPrice, voteTime, 
-                                {from: web3.eth.accounts[0], gas: '3000000', value: web3.toWei('2', 'ether') }, function(err, res){                                       
-                                    if(err){
-                                        console.log(err);
-                                    } else {                                                                                                                                                                    
-                                        console.log('create ballot result ', res);
-                                    } 
-                                    $this.html($this.data('original-text'));
-                            });
-            //}
+            if(isNaN(initTokens) || isNaN(tokenPrice) || isNaN(voteTime)){
+               alert('Invalid Input');
+               $this.html($this.data('original-text'));
+            } else {
+                factory.createBallot.sendTransaction( desc, ids, names, imgHashHeads, imgHashTails, initTokens, tokenPrice, voteTime, 
+                                    {from: web3.eth.accounts[0], gas: '3000000', value: web3.toWei('2', 'ether') }, function(err, res){                                       
+                                        if(err){
+                                            console.log(err);
+                                        } else {                                                                                                                                                                    
+                                            console.log('create ballot result ', res);
+                                        } 
+                                        $this.html($this.data('original-text'));
+                                });
+            }
         } else {
             alert('Your wallet is not open yet!');
         }
@@ -120,4 +118,59 @@ async function startApp() {
     });
 }
 
+//-- HELPER FUNCTION -----------------
+function getInitData(){
+    
+    factory.owner.call({from:web3.eth.accounts[0]}, function(err, data){
+        owner = data;
+    });
+
+    factory.getBalance.call({from:web3.eth.accounts[0]}, function(err, data){
+        var dataInEther  = web3.fromWei(data, 'ether');
+        $('#factory-balance').text(dataInEther);
+    });
+
+    factory.costPerBallot.call({from:web3.eth.accounts[0]}, function(err, data){
+        var dataInEther  = web3.fromWei(data, 'ether');
+        $('#factory-cost').text(dataInEther);
+    });
+
+    factory.getDeployedBallots.call({from:web3.eth.accounts[0]}, function(err,deployedBallots){
+        var add = '';
+        for(var i = 0; i < deployedBallots.length; i++){
+            add += '<div class="ballot"><p>' + deployedBallots[i] + '</p>' +
+            '<a href="ballot/' + deployedBallots[i] + '">View Details</a></div>';
+        }   
+        $('#start-ballots').append(add);
+    });
+
+    setInterval( function(){
+        factory.owner.call({from:web3.eth.accounts[0]}, function(err, data){
+            if(owner != web3.eth.accounts[0]){
+                $('#factory-owner').hide();
+            } else {
+                $('#factory-owner').show();
+            }
+        })}, 
+        100
+    );
+}
+
+
+convertAndUpload = async(reader) => {
+    const buffer = await Buffer.from(reader.result);
+    
+    ipfs.add(buffer, (err, ipfsHash) => {
+        if(err){
+            alert(err);
+        } else {
+            var oldVal = $('#ip-imgs').val();
+            var newVal = oldVal + (oldVal == ''? ipfsHash[0].hash : ',' + ipfsHash[0].hash);
+
+            $('#ip-imgs').val(newVal);
+        }
+
+        $this.html($this.data('original-text'));
+    });
+};
 

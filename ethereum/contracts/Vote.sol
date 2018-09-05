@@ -16,7 +16,8 @@ contract BallotFactory {
         string _description, 
         uint[] candidateIds, 
         bytes32[] candidateNames, 
-        bytes32[] imgHashHead, 
+        bytes32[] imgHashHead,
+        bytes32[] imgHashTail, 
         uint tokens, 
         uint pricePerToken, 
         uint _voteTime
@@ -27,7 +28,8 @@ contract BallotFactory {
         address newBallot = new Ballot(_description, 
         candidateIds, 
         candidateNames, 
-        imgHashHead, 
+        imgHashHead,
+        imgHashTail, 
         tokens, 
         pricePerToken, 
         _voteTime, 
@@ -40,6 +42,10 @@ contract BallotFactory {
 
     function getDeployedBallots() public view returns (address[]) {
         return deployedBallots;
+    }
+
+    function getBalance() public view returns (uint) {
+        return this.balance;
     }
 
     function withdraw () public {
@@ -61,7 +67,8 @@ contract Ballot {
     struct candidate {
         uint id;
         bytes32 name;   // Short name (up to 32 bytes)
-        bytes32 imageHash; // Hash of image when upload to ipfs
+        bytes32 imgHashHead; // first half of image ipfs hash
+        bytes32 imgHashTail; // second half of image ipfs hash
         uint voteCount; // Number of accumulated votes
     }
 
@@ -79,6 +86,10 @@ contract Ballot {
 
     /// MAPPING
     mapping (address => voter) public voters;
+
+    function voterDetails(address voter) public view returns(uint, uint, bool[]){
+        return (voters[voter].tokensBought, voters[voter].availableTokens, voters[voter].tokensUsedPerCandidate);
+    }
 
     /// MODIFIER
     modifier onlyOwner(){
@@ -105,6 +116,7 @@ contract Ballot {
     public payable {
         require(candidateNames.length == candidateIds.length, "Number of name must equals number of id");
         require(imgHashHead.length == candidateIds.length, "Number of images must equals number of id");
+        require(imgHashTail.length == candidateIds.length, "Number of images must equals number of id");
 
         owner = _owner;
         description = _description;
@@ -117,9 +129,10 @@ contract Ballot {
 
         for(uint i = 0; i < candidateNames.length; i ++ ){
             candidateList.push(candidate({
-                id: candidateIds[i], 
-                name: candidateNames[i], 
-                imageHash: imgHashHead[i], 
+                id: candidateIds[i],
+                name: candidateNames[i],
+                imgHashHead: imgHashHead[i],
+                imgHashTail: imgHashTail[i],
                 voteCount: 0
             }));
         }
@@ -133,7 +146,6 @@ contract Ballot {
         uint tokensToBuy = msg.value / tokenPrice;
         //Can not buy more than balance tokens.
         require(tokensToBuy <= balanceTokens, "Available tokens is not enough for you");
-        
 
         //update ballot tokens, voter tokens
         voters[msg.sender].tokensBought += tokensToBuy;
@@ -200,6 +212,10 @@ contract Ballot {
             }
         }
         return uint(-1);
+    }
+
+    function isOpen() public view returns (bool) {
+        return now < startTime + voteTime;
     }
  
 }
