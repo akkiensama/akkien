@@ -30,7 +30,7 @@ async function startApp() {
     });
 
     Factory  = web3.eth.contract(JSON.parse(compiledFactory.interface));
-    factory = Factory.at('0x823fc37B9CB3B8016D5FC886cC5C820d0C80d39c');
+    factory = Factory.at('0x1bB423fF71608a539c42932FfEf37f1d3fB4b1D4');
 
     getInitData();
 
@@ -115,6 +115,26 @@ async function startApp() {
             alert('Your wallet is not open yet!');
         }
 
+    });
+
+    $("#btn-factory-withdraw").on('click', function(event){
+        event.preventDefault();
+
+        $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Withdrawing Money...';
+        if ($(this).html() !== loadingText) {
+            $this.data('original-text', $(this).html());
+            $this.html(loadingText);
+        }  
+       
+        factory.withdraw.sendTransaction({from: web3.eth.accounts[0], gas: '1000000'}, function(err, res){
+            if(err){
+                alert(err);
+            } else {
+                $this.html($this.data('original-text'));
+            }  
+        });
+       
     });
 }
 

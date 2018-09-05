@@ -56,7 +56,12 @@ td{
   color: black;
 }
 
-.rounded-circle {
+.avatar{
   width: 100px;
   height: 100px;
+}
+
+.isVoted{
+  width: 50px;
+  height: 50px;
 }

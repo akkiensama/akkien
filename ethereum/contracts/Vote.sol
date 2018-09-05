@@ -197,6 +197,10 @@ contract Ballot {
         return candidateList.length;
     }
 
+    function getBalance() public view returns (uint) {
+        return this.balance;
+    }
+
     // Ballot creation can withdraw money when ballot close
     function withdraw() public onlyOwner {
         require(now >= startTime + voteTime, "Voting time is not over");

@@ -2,8 +2,9 @@
 <% include partials/navbar %>
   <meta id="ballot-add" content="<%=address%>"></meta>
   <div class="container-fluid text-white">
-    <h1 id="welcome" style="color: #341f97"></h1>
+    <h1 id="welcome" style="color: #006266"></h1>
     <p class="data" id="description"></p>
+    <p id="ballot-status" style="color: red;"></p>
     <div class="row">
       <div class="col-lg-8">
           <table>
@@ -54,20 +55,28 @@
       </div>
     </div>
 
-    <p class="tableCap text-center">List of Candidates</p>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Avatar</th>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Received Votes</th>
-          <th>You voted</th>
-        </tr>
-      </thead>
-      <tbody id="candidatesTb"></tbody>
-      
-    </table>
+    <div id="tb-wrapper">
+      <p class="tableCap text-center">List of Candidates</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Avatar</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Received Votes</th>
+            <th>You voted</th>
+          </tr>
+        </thead>
+        <tbody id="candidatesTb"></tbody>       
+      </table>
+    </div>
+    
+    <div id="ballot-owner" align="center">
+      <br>
+      <p>Your ballot hold <span id="ballot-balance" style="color:blue;"></span> wei</p>
+      <button id="btn-ballot-withdraw" class="btn btn-primary">Withdraw Ballot Money</button>
+    </div>
+
   </div>
 
   <script src="/javascripts/ballot.client.js"></script>
