@@ -197,12 +197,13 @@ function getInitData(){
                     let imgLink = 'https://gateway.ipfs.io/ipfs/' + hashFromHEx;
 
                     $("#candidatesTb").append(
-                        '<tr><td><img src="' + imgLink + '" class="avatar rounded-circle" alt="avatar"></td><td>' +
-                        Info[0] + '</td><td>' + 
-                        hex_to_ascii(Info[1]) + '</td><td>' +             
-                        Info[4] + '</td><td>' + 
-                        '<img src="/images/' + imgSrc + '" class="isVoted rounded-circle" alt="isVoted">' +
-                        '</td><tr>'   
+                        `<tr>
+                            <td><img src=${imgLink} class="avatar rounded-circle" alt="avatar"></td>
+                            <td>${Info[0]}</td>
+                            <td>${hex_to_ascii(Info[1])}</td>
+                            <td>${Info[4]}</td>
+                            <td><img src="/images/${imgSrc}" class="isVoted rounded-circle" alt="isVoted"></td>
+                        <tr>`  
                     ); 
                 });
             }

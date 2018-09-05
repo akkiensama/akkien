@@ -1,9 +1,9 @@
-var compiledBallot;
+let compiledBallot;
 
-var Ballot;
-var ballot;
+let Ballot;
+let ballot;
 
-var owner;
+let owner;
 
 const ipfs = window.IpfsApi({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 const Buffer = window.IpfsApi().Buffer;
@@ -41,7 +41,7 @@ async function startApp() {
         event.preventDefault();
 
         $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Uploading Image ...';
+        let loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Uploading Image ...';
         if ($(this).html() !== loadingText) {
             $this.data('original-text', $(this).html());
             $this.html(loadingText);
@@ -70,32 +70,32 @@ async function startApp() {
 
         if(web3.eth.accounts[0]){
             $this = $(this);
-            var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Deploying Contract...';
+            let loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Deploying Contract...';
             if ($(this).html() !== loadingText) {
                 $this.data('original-text', $(this).html());
                 $this.html(loadingText);
             }
 
             //-----GET INPUT DATA-----------------
-            var desc = $("#ip-desc").val();
+            let desc = $("#ip-desc").val();
 
-            var raw_ids = $("#ip-ids").val();
-            var ids = raw_ids.split(",");
-            var raw_names = $("#ip-names").val();
-            var names = raw_names.split(",");
+            let raw_ids = $("#ip-ids").val();
+            let ids = raw_ids.split(",");
+            let raw_names = $("#ip-names").val();
+            let names = raw_names.split(",");
 
-            var raw_imageHashs = $("#ip-imgs").val();
-            var imageHashs = raw_imageHashs.split(",");
-            var imgHashHeads = [];
-            var imgHashTails = [];
-            for(var i = 0; i < imageHashs.length; i++){
+            let raw_imageHashs = $("#ip-imgs").val();
+            let imageHashs = raw_imageHashs.split(",");
+            let imgHashHeads = [];
+            let imgHashTails = [];
+            for(let i = 0; i < imageHashs.length; i++){
                 imgHashHeads.push(imageHashs[i].substring(0, 32));
                 imgHashTails.push(imageHashs[i].substring(32, 46));
             }
 
-            var initTokens = $("#ip-initTokens").val();
-            var tokenPrice = $("#ip-tokenPrice").val();
-            var voteTime = $("#ip-time").val();
+            let initTokens = $("#ip-initTokens").val();
+            let tokenPrice = $("#ip-tokenPrice").val();
+            let voteTime = $("#ip-time").val();
 
             if(isNaN(initTokens) || isNaN(tokenPrice) || isNaN(voteTime)){
                alert('Invalid Input');
@@ -121,7 +121,7 @@ async function startApp() {
         event.preventDefault();
 
         $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Withdrawing Money...';
+        let loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Withdrawing Money...';
         if ($(this).html() !== loadingText) {
             $this.data('original-text', $(this).html());
             $this.html(loadingText);
@@ -146,20 +146,22 @@ function getInitData(){
     });
 
     factory.getBalance.call({from:web3.eth.accounts[0]}, function(err, data){
-        var dataInEther  = web3.fromWei(data, 'ether');
+        let dataInEther  = web3.fromWei(data, 'ether');
         $('#factory-balance').text(dataInEther);
     });
 
     factory.costPerBallot.call({from:web3.eth.accounts[0]}, function(err, data){
-        var dataInEther  = web3.fromWei(data, 'ether');
+        let dataInEther  = web3.fromWei(data, 'ether');
         $('#factory-cost').text(dataInEther);
     });
 
     factory.getDeployedBallots.call({from:web3.eth.accounts[0]}, function(err,deployedBallots){
-        var add = '';
-        for(var i = 0; i < deployedBallots.length; i++){
-            add += '<div class="ballot"><p>' + deployedBallots[i] + '</p>' +
-            '<a href="ballot/' + deployedBallots[i] + '">View Details</a></div>';
+        let add = '';
+        for(let i = 0; i < deployedBallots.length; i++){
+            add += `<div class="ballot">
+                        <p>${deployedBallots[i]}</p>
+                        <a href="ballot/${deployedBallots[i]}">View Details</a>
+                    </div>`;
         }   
         $('#start-ballots').append(add);
     });
@@ -184,8 +186,8 @@ convertAndUpload = async(reader) => {
         if(err){
             alert(err);
         } else {
-            var oldVal = $('#ip-imgs').val();
-            var newVal = oldVal + (oldVal == ''? ipfsHash[0].hash : ',' + ipfsHash[0].hash);
+            let oldVal = $('#ip-imgs').val();
+            let newVal = oldVal + (oldVal == ''? ipfsHash[0].hash : ',' + ipfsHash[0].hash);
 
             $('#ip-imgs').val(newVal);
         }
